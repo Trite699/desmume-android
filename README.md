@@ -29,7 +29,7 @@ Battery saves (.dsv) are stored in app-private storage under `files/desmume/`.
 ## Known gaps
 No JIT, no GLES renderer (slow on weak devices), Wi-Fi bridge and microphone stubbed,
 master-brightness postprocess not applied, no settings UI, one save-state slot, audio/video
-sync is approximate. Licence: GPLv2+ (inherited from DeSmuME).
+sync is approximate. Licence: MIT.
 
 ## Checks without an NDK
 - `tools/host_build_check.sh`: builds core + glue with host g++ and links a smoke test
