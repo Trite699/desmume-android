@@ -52,7 +52,21 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: |
+          set -o pipefail
+          ./gradlew assembleDebug --stacktrace 2>&1 | tee build.log
+
+      - name: Show the actual native build errors
+        if: failure()
+        run: |
+          grep -n -B2 -A10 -E "FAILED:|error:|undefined (reference|symbol)|ld(\.lld)?: error" build.log | head -150 || true
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
 
       - name: Upload Compiled APK
         uses: actions/upload-artifact@v4
