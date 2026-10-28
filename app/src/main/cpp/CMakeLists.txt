@@ -5,8 +5,18 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_C_STANDARD 11)
 
 # Repo layout: <repo>/desmume/src is the emulator core, <repo>/android is this project.
+# Override with -DDESMUME_SRC=... or the DESMUME_SRC environment variable (used by CI).
 get_filename_component(REPO_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../../.." ABSOLUTE)
-set(DESMUME_SRC "${REPO_ROOT}/desmume/src")
+if(NOT DESMUME_SRC AND DEFINED ENV{DESMUME_SRC})
+  set(DESMUME_SRC "$ENV{DESMUME_SRC}")
+endif()
+if(NOT DESMUME_SRC)
+  set(DESMUME_SRC "${REPO_ROOT}/desmume/src")
+endif()
+if(NOT EXISTS "${DESMUME_SRC}/NDSSystem.cpp")
+  message(FATAL_ERROR "DeSmuME core sources not found at ${DESMUME_SRC}. "
+                      "Set DESMUME_SRC to the upstream desmume/src directory.")
+endif()
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
   add_compile_definitions(HOST_64)
