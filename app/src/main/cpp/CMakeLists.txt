@@ -139,6 +139,12 @@ set(CORE_SOURCES
     ${DESMUME_SRC}/libretro-common/encodings/encoding_utf.c
 )
 
+# libretro-common's features_cpu.c uses glibc's HWCAP_ARM_* names; bionic spells them differently.
+# Force-include a compat header for that single file (see shim/hwcap_compat.h).
+set_source_files_properties(
+    ${DESMUME_SRC}/libretro-common/features/features_cpu.c
+    PROPERTIES COMPILE_OPTIONS "-include;${CMAKE_CURRENT_SOURCE_DIR}/shim/hwcap_compat.h")
+
 # C files in the list need to be compiled as C; CMake handles that by extension.
 add_library(desmume_core STATIC ${CORE_SOURCES})
 target_include_directories(desmume_core PUBLIC
