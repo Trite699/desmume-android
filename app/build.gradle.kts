@@ -6,6 +6,7 @@ plugins {
 android {
     namespace = "org.desmume.android"
     compileSdk = 34
+    ndkVersion = "25.2.9519653"
 
     defaultConfig {
         applicationId = "org.desmume.android"
