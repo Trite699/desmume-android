@@ -2,6 +2,7 @@
 #include <string>
 #include <string.h>
 #include <stdlib.h>
+#include <pthread.h>
 #include "pcap.h"
 #include "types.h"
 #include "SPU.h"
@@ -10,6 +11,13 @@
 #include "android_audio.h"
 
 std::string g_android_config_dir;
+
+// libretro-common's rthreads.c calls pthread_setname_np() unconditionally, but bionic only
+// provides it from API 26. With minSdk 24 the symbol is missing at link time (the NDK links
+// shared libs with --no-undefined), so supply a no-op. Thread names are cosmetic.
+#if defined(__ANDROID__) && __ANDROID_API__ < 26
+extern "C" int pthread_setname_np(pthread_t, const char *) { return 0; }
+#endif
 
 // Global run flag the core reads (declared in NDSSystem.h); frontends own the definition.
 volatile bool execute = false;
